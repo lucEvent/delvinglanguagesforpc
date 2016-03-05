@@ -6,6 +6,7 @@ import delvinglanguages.kernel.util.Languages;
 import delvinglanguages.settings.AppSettings;
 import delvinglanguages.util.DLHandler;
 import delvinglanguages.view.AddLanguageFrame;
+import delvinglanguages.view.ConfirmActionFrame;
 import delvinglanguages.view.DrawerView;
 import delvinglanguages.view.ThemesView;
 import delvinglanguages.view.WordsView;
@@ -59,6 +60,9 @@ public class Main extends javax.swing.JFrame implements DLHandler {
         contentPane = new javax.swing.JTabbedPane();
         javax.swing.JPanel languageInfoPanel = new javax.swing.JPanel();
         languageName = new javax.swing.JLabel();
+        editLanguage = new javax.swing.JButton();
+        removeLanguage = new javax.swing.JButton();
+        exportLanguage = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Delving Languages v1.0");
@@ -100,22 +104,63 @@ public class Main extends javax.swing.JFrame implements DLHandler {
         languageName.setText("Language Name");
         languageName.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 10));
 
+        editLanguage.setText("Edit Language");
+        editLanguage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLanguageActionPerformed(evt);
+            }
+        });
+
+        removeLanguage.setText("Remove Language");
+        removeLanguage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLanguageActionPerformed(evt);
+            }
+        });
+
+        exportLanguage.setText("Export Language");
+        exportLanguage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportLanguageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout languageInfoPanelLayout = new javax.swing.GroupLayout(languageInfoPanel);
         languageInfoPanel.setLayout(languageInfoPanelLayout);
         languageInfoPanelLayout.setHorizontalGroup(
             languageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(languageInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(languageName)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(languageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(languageInfoPanelLayout.createSequentialGroup()
+                        .addComponent(languageName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(languageInfoPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(languageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(removeLanguage, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(exportLanguage, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap())
         );
+
+        languageInfoPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {editLanguage, exportLanguage, removeLanguage});
+
         languageInfoPanelLayout.setVerticalGroup(
             languageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(languageInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(languageName)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addGroup(languageInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(languageName)
+                    .addComponent(editLanguage))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(removeLanguage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(exportLanguage)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
+
+        languageInfoPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {editLanguage, exportLanguage, removeLanguage});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -171,6 +216,24 @@ public class Main extends javax.swing.JFrame implements DLHandler {
         }
     }//GEN-LAST:event_languageListMouseClicked
 
+    private void editLanguageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLanguageActionPerformed
+        if (currentLanguage != null) {
+            //TODO    new AddLanguageFrame(this);
+        }
+    }//GEN-LAST:event_editLanguageActionPerformed
+
+    private void removeLanguageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLanguageActionPerformed
+        if (currentLanguage != null) {
+            new ConfirmActionFrame(ConfirmActionFrame.DELETE_LANGUAGE, this, currentLanguage, currentLanguage).setVisible(true);
+        }
+    }//GEN-LAST:event_removeLanguageActionPerformed
+
+    private void exportLanguageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportLanguageActionPerformed
+        if (currentLanguage != null) {
+            data.export(currentLanguage);
+        }
+    }//GEN-LAST:event_exportLanguageActionPerformed
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
@@ -195,9 +258,12 @@ public class Main extends javax.swing.JFrame implements DLHandler {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLanguage;
     private javax.swing.JTabbedPane contentPane;
+    private javax.swing.JButton editLanguage;
+    private javax.swing.JButton exportLanguage;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<Language> languageList;
     private javax.swing.JLabel languageName;
+    private javax.swing.JButton removeLanguage;
     // End of variables declaration//GEN-END:variables
 
 //<editor-fold defaultstate="collapsed" desc="-> Displays <-">
@@ -252,6 +318,7 @@ public class Main extends javax.swing.JFrame implements DLHandler {
     public void reportChange(int change) {
         switch (change) {
             case ADDED_LANGUAGE:
+            case DELETED_LANGUAGE:
                 displayLanguages(data.getLanguages());
                 break;
             case ADDED_WORD:

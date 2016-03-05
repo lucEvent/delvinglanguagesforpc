@@ -5,7 +5,6 @@ import delvinglanguages.kernel.util.Language;
 import delvinglanguages.kernel.util.Theme;
 import delvinglanguages.kernel.util.ThemePair;
 import delvinglanguages.kernel.util.ThemePairs;
-import delvinglanguages.kernel.util.Themes;
 import delvinglanguages.settings.AppSettings;
 import delvinglanguages.util.DLHandler;
 import java.awt.Color;

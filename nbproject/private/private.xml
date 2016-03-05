@@ -4,11 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group/>
         <group name="NetBeansProjects">
-            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/Main.java</file>
-            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/view/WordsView.java</file>
-            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/view/DrawerView.java</file>
-            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/view/ThemesView.java</file>
-            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/io/DataManager.java</file>
+            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/test/WordReference.java</file>
+            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/kernel/util/Language.java</file>
+            <file>file:/C:/Users/Rafa/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/kernel/util/Word.java</file>
         </group>
     </open-files>
 </project-private>

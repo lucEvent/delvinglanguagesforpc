@@ -4,6 +4,7 @@ import delvinglanguages.io.util.InStream;
 import delvinglanguages.io.util.OutStream;
 import delvinglanguages.kernel.util.DrawerWord;
 import delvinglanguages.kernel.util.DrawerWords;
+import delvinglanguages.kernel.util.Inflexion;
 import delvinglanguages.kernel.util.Inflexions;
 import delvinglanguages.kernel.util.Language;
 import delvinglanguages.kernel.util.Languages;
@@ -127,7 +128,21 @@ public class DataManager {
             InStream in = new InStream(new File(wordsFolder, language + EXTENSION));
             int nwords = in.readInt();
             for (int i = 0; i < nwords; i++) {
-                res.add(readWord(in));
+                
+                //
+                if (language.contains("Game of")) {
+                    Word w = readWord(in);
+                    
+                    for (Inflexion inf : w.getInflexions()) {
+               //     System.out.println("Size["+inf.translations.length+"]");
+                        
+                    }
+                    
+                    res.add(w);
+                }
+                //
+                
+ //               res.add(readWord(in));
             }
             in.close();
         } catch (Exception e) {
@@ -189,64 +204,6 @@ public class DataManager {
         out.writeString(word.getInflexionsAsString());
     }
 
-    public void createAppFile() {
-        Languages languages = readLanguages();
-
-        try {
-            OutStream stream = new OutStream(new File(dataFolder, "backup.delv"));
-
-            stream.writeInt(languages.size());  //Num of languages
-
-            for (Language language : languages) {
-                stream.writeInt(language.CODE);
-                stream.writeString(language.name);
-                stream.writeInt(language.settings);
-
-                // Statistics
-                stream.writeInt(0);
-                stream.writeInt(0);
-                stream.writeInt(0);
-                stream.writeInt(0);
-                stream.writeInt(0);
-
-                //Words
-                Words words = readWords(language.name);
-                stream.writeInt(words.size());
-                for (Word word : words) {
-                    saveWord(stream, word);
-                }
-
-                //Drawer words
-                DrawerWords drawer = readDrawerWords(language.name);
-                stream.writeInt(drawer.size());
-                for (DrawerWord dw : drawer) {
-                    stream.writeString(dw.name);
-                }
-
-                //Themes
-                Themes themes = readThemes(language.name);
-                stream.writeInt(themes.size());
-                for (Theme theme : themes) {
-                    stream.writeString(theme.name);
-                    stream.writeInt(theme.pairs.size());
-                    for (ThemePair pair : theme.pairs) {
-                        stream.writeString(pair.inDelved);
-                        stream.writeString(pair.inNative);
-                    }
-                }
-
-                //Tests
-                stream.writeInt(0);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error during backup [" + e.getMessage() + "]");
-            e.printStackTrace();
-            return;
-        }
-        System.out.println("Svenska Backup done successfully!");
-    }
-
     /**
      * Only for Administrator use. It must only be called inside this class, and
      * not while the main program is running.
@@ -271,18 +228,18 @@ public class DataManager {
                 stream.readInt();
 
                 //Words
+                int debW = 0;
                 int nWords = stream.readInt();
                 Words words = new Words();
                 for (int j = 0; j < nWords; j++) {   // For each WORD of the language
-                    String name = stream.readString();
-                    String pronunciation = stream.readString();
-                    int priority = stream.readInt();
-                    String inflexionsString = stream.readString();
-                    boolean added = words.add(new Word(name, new Inflexions(inflexionsString), pronunciation, priority));
+                    Word word = readWord(stream);
+                    boolean added = words.add(word);
                     if (!added) {
-                        System.out.println(" [Can't add] " + name);
+                        System.out.println(" [Can't add] " + word.getName());
                     }
+                    debW++;
                 }
+                System.out.println("Words added = "+debW + " ó "+ words.size());
 
                 //DrawerWords
                 int nDrawerWords = stream.readInt();
@@ -336,6 +293,67 @@ public class DataManager {
     public static void main(String[] args) {
         DataManager dm = new DataManager();
         dm.backUpFileManagement();
+    }
+
+    public void export(Languages languages) {
+        try {
+            OutStream stream = new OutStream(new File(dataFolder, "backup.delv"));
+
+            stream.writeInt(languages.size());  //Num of languages
+
+            for (Language language : languages) {
+                stream.writeInt(language.CODE);
+                stream.writeString(language.name);
+                stream.writeInt(language.settings);
+
+                // Statistics
+                stream.writeInt(0);
+                stream.writeInt(0);
+                stream.writeInt(0);
+                stream.writeInt(0);
+                stream.writeInt(0);
+
+                //Words
+                int debW = 0;
+                Words words = readWords(language.name);
+                stream.writeInt(words.size());
+                for (Word word : words) {
+                    debW++;
+                    saveWord(stream, word);
+                }
+                System.out.println("Size: "+words.size() + ", saved:"+debW);
+
+                //Drawer words
+                DrawerWords drawer = readDrawerWords(language.name);
+                stream.writeInt(drawer.size());
+                System.out.println("Drawer size = "+drawer.size());
+                for (DrawerWord dw : drawer) {
+                    stream.writeString(dw.name);
+                }
+
+                //Themes
+                Themes themes = readThemes(language.name);
+                stream.writeInt(themes.size());
+                for (Theme theme : themes) {
+                    stream.writeString(theme.name);
+                    stream.writeInt(theme.pairs.size());
+                    for (ThemePair pair : theme.pairs) {
+                        stream.writeString(pair.inDelved);
+                        stream.writeString(pair.inNative);
+                    }
+                }
+
+                //Tests
+                stream.writeInt(0);
+            }
+
+            stream.close();
+        } catch (Exception e) {
+            System.out.println("Error during backup [" + e.getMessage() + "]");
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Export done successfully");
     }
 
 }

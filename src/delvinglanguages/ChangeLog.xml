@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changes>
+    <version version="1.1" date="05.03.2016">
+        Fixed exporting.
+        Add formating to translations when adding word.
+        Changelog added.
+        Kernel function for search terms in Wordreference automatically added.
+    </version>
+    <version version="1.0" date="04.03.2016">
+        Project start up
+    </version>
+</changes>

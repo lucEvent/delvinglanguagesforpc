@@ -123,4 +123,14 @@ public class KernelManager {
         }
     }
 
+    public void exportAll() {
+        data.export(getLanguages());
+    }
+
+    public void export(Language language) {
+        Languages languages = new Languages();
+        languages.add(language);
+        data.export(languages);
+    }
+
 }

@@ -8,6 +8,7 @@ import delvinglanguages.kernel.util.Language;
 import delvinglanguages.kernel.util.Word;
 import delvinglanguages.settings.AppSettings;
 import delvinglanguages.util.DLHandler;
+import delvinglanguages.util.Formater;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -654,6 +655,7 @@ public class WordEditFrame extends JFrame {
             reportBox.setText("Word is missing");
             return;
         }
+        name = Formater.format(name)[0];
 
         String pronunciation = inPronuntiation.getText();
         if ((currentLanguage.CODE == Language.UK
@@ -706,17 +708,19 @@ public class WordEditFrame extends JFrame {
     }//GEN-LAST:event_onTypeSelected
 
     private void addInflexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInflexionActionPerformed
-        String translations = inTranslation.getText();
-        if (translations.isEmpty()) {
+        String translation = inTranslation.getText();
+        if (translation.isEmpty()) {
             reportBox.setText("No translations inputed");
             return;
         }
+        String[] translations = Formater.format(translation);
+
         int type = getInflexionType();
         if (type == -1) {
             reportBox.setText("No type selected");
             return;
         }
-        ArrayList<String> formsarray = new ArrayList<String>();
+        ArrayList<String> formsarray = new ArrayList<>();
         for (int i = 0; i < checks.length; i++) {
             if (checks[i].isSelected()) {
                 String form = in_inf[i].getText();
@@ -731,11 +735,11 @@ public class WordEditFrame extends JFrame {
 
         if (tempData.inflexionModifying != null) {
             tempData.inflexionModifying.inflexions = inflexions;
-            tempData.inflexionModifying.translations = new String[]{translations};
+            tempData.inflexionModifying.translations = translations;
             tempData.inflexionModifying.type = type;
             tempData.inflexionModifying = null;
         } else {
-            tempData.inflexionscopy.add(new Inflexion(inflexions, new String[]{translations}, type));
+            tempData.inflexionscopy.add(new Inflexion(inflexions, translations, type));
         }
         displayInflexionsList();
 

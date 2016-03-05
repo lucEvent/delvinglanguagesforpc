@@ -1,0 +1,270 @@
+
+import delvinglanguages.kernel.util.Language;
+import delvinglanguages.kernel.util.Word;
+import delvinglanguages.util.DLResultHandler;
+import delvinglanguages.util.Formater;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.TreeSet;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class WordReference {
+
+    private final static String CODE_ARABIC = "ar";
+    private final static String CODE_CHINESE = "zh";
+    private final static String CODE_CZECH = "cz";
+    private final static String CODE_ENGLISH = "en";
+    private final static String CODE_FRENCH = "fr";
+    private final static String CODE_GREEK = "gr";
+    private final static String CODE_ITALIAN = "it";
+    private final static String CODE_JAPANESE = "ja";
+    private final static String CODE_KOREAN = "ko";
+    private final static String CODE_POLISH = "pl";
+    private final static String CODE_PORTUGUESE = "pt";
+    private final static String CODE_ROMANIAN = "ro";
+    private final static String CODE_SPANISH = "es";
+    private final static String CODE_TURKISH = "tr";
+
+    private final static String[] CODES = new String[]{
+        CODE_ENGLISH, CODE_ENGLISH, null, null, CODE_SPANISH, null,
+        null, CODE_CZECH, null, null, null, CODE_FRENCH, null,
+        CODE_GREEK, CODE_ITALIAN, null, CODE_PORTUGUESE, null
+    };
+
+    // http://api.wordreference.com/a51d4/enes/welcome
+    // {api_version}/{API_key}/json/{dictionary}/{term}
+    private final static String URL_BASE = "http://api.wordreference.com/";
+    private final static String API_VERSION = "0.8";
+    private final static String API_KEY = "a51d4";
+
+    private final DLResultHandler handler;
+    private final String header;
+
+    public WordReference(int from_language_code, int to_language_code, DLResultHandler handler) {
+        String from = CODES[from_language_code];
+        String to = CODES[to_language_code];
+
+        if (from != null && to != null && (from == CODE_ENGLISH || to == CODE_ENGLISH)) {
+            header = URL_BASE + API_VERSION + "/" + API_KEY + "/json/" + from + to + "/";
+        } else {
+            header = null;
+        }
+        this.handler = handler;
+    }
+
+    public boolean searchTerm(String search) {
+        if (header == null) {
+            return false;
+        }
+        new WRSearch(search).start();
+        return true;
+    }
+
+    private class WRSearch extends Thread implements Runnable {
+
+        TreeSet<String>[] found;
+
+        final String term;
+
+        WRSearch(String term) {
+            this.term = term;
+            found = new TreeSet[Word.NUMBER_OF_TYPES];
+            for (int i = 0; i < found.length; i++) {
+                found[i] = new TreeSet<>();
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                URL page = new URL(header + term);
+                System.out.println(header + term);
+                //Lectura del contenido de la pagina
+                BufferedReader in = new BufferedReader(new InputStreamReader(page.openStream()));
+                while (!in.ready());
+                StringBuilder content = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+
+                //Tratamiento datos json
+                JSONObject alldata = new JSONObject(content.toString());
+
+                String[] terms = new String[]{"term0", "term1", "term2"};
+                for (String termi : terms) {
+                    if (!alldata.has(termi)) {
+                        continue;
+                    }
+                    JSONObject data = alldata.getJSONObject(termi);
+
+                    String[] sections = new String[]{"Entries", "PrincipalTranslations", "AdditionalTranslations"};
+                    for (String section : sections) {
+                        if (data.has(section)) {
+                            addAll(data.getJSONObject(section));
+                        }
+                    }
+                }
+
+            } catch (MalformedURLException e) {
+                debug("Error en getContent");
+                e.printStackTrace();
+
+            } catch (Exception e) {
+                debug("Exception: " + e.toString());
+                e.printStackTrace();
+            }
+
+            handler.onWorkDone(0, found);
+        }
+
+        void addAll(JSONObject translations) throws JSONException {
+            String[] KEYS = {"OriginalTerm", "FirstTranslation", "SecondTranslation", "ThirdTranslation", "FourthTranslation"};
+
+            int N = 0;
+            while (true) {
+                if (translations.has("" + N)) {
+                    JSONObject translation = translations.getJSONObject("" + N);
+
+                    int type = getType(translation.getJSONObject(KEYS[0]));
+
+                    add(translation.getJSONObject(KEYS[1]), type);
+
+                    if (translation.has(KEYS[2])) {
+                        add(translation.getJSONObject(KEYS[2]), type);
+
+                        if (translation.has(KEYS[3])) {
+                            add(translation.getJSONObject(KEYS[3]), type);
+
+                            if (translation.has(KEYS[4])) {
+                                add(translation.getJSONObject(KEYS[4]), type);
+                            }
+
+                        }
+                    }
+                    N++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        void add(JSONObject data, int type) {
+            if (type != -1) {
+                String name = data.getString("term");
+                found[type].addAll(Arrays.asList(Formater.format(name)));
+            }
+        }
+
+        int getType(JSONObject data) throws JSONException {
+            String typeCode = data.getString("POS");
+            int type;
+
+            switch (typeCode) {
+                case "n":
+                case "nf":
+                case "nm":
+                case "nfpl":
+                case "nmpl":
+                case "loc nom":
+                case "loc nom f":
+                case "grupo nom":
+                case "loc nom m":
+                case "n inv m/f":
+                case "n común":
+                case "npl":
+                    type = 0;
+                    break;
+                case "vtr":
+                case "vi":
+                case "v prnl":
+                case "vi + prep":
+                case "vtr + prep":
+                case "v":
+                case "v prnl + prep":
+                case "vi + adv":
+                case "vi + adj":
+                case "v aux":
+                case "vi + n":
+                    type = 1;
+                    break;
+                case "adj":
+                case "adj mf":
+                case "loc adj":
+                case "participio":
+                    type = 2;
+                    break;
+                case "adv":
+                case "loc adv":
+                    type = 3;
+                    break;
+                case "vtr phrasal sep":
+                    type = 4;
+                    break;
+                case "loc verb":
+                case "fr hecha":
+                case "v expr":
+                case "expr":
+                    type = 5;
+                    break;
+                case "prep":
+                case "loc prep":
+                    type = 6;
+                    break;
+                case "conj":
+                    type = 7;
+                    break;
+                case "interj":
+                case "loc interj":
+                case "pron":
+                case "prefijo":
+                case "loc prnl":
+                    type = 8;
+                    break;
+                default:
+                    debug("HEYYY!!!! no tengo este tipo:" + typeCode);
+                    type = -1;
+                    break;
+            }
+            return type;
+        }
+    }
+
+    private void debug(String text) {
+        System.out.println("##WordReference##" + text);
+    }
+
+    public static void main(String[] args) {
+
+        WordReference w = new WordReference(Language.UK, Language.ES, new DLResultHandler() {
+            @Override
+            public void onWorkDone(int work_id, Object dataResult) {
+                result(dataResult);
+            }
+        });
+
+        w.searchTerm("Dawn");
+    }
+
+    private static void result(Object dataResult) {
+        String[] titles = new String[]{"NN", "VB", "ADJ", "ADV",
+            "PHV", "EXP", "PREP", "CONJ", "OTH"};
+
+        TreeSet<String>[] data = (TreeSet<String>[]) dataResult;
+
+        for (int i = 0; i < data.length; i++) {
+            System.out.println("Typo " + titles[i]);
+            for (String string : data[i]) {
+                System.out.println(" - " + string);
+            }
+        }
+
+    }
+
+}

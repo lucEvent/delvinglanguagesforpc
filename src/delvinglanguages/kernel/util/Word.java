@@ -6,9 +6,10 @@ import java.util.ArrayList;
 public class Word implements Comparable<Word> {
 
     public static final int INITIAL_PRIORITY = 100;
+    public static final int NUMBER_OF_TYPES = 9;
 
-    public final static int NOUN = 0x01;
-    public final static int VERB = 0x02;
+    public final static int NOUN = 1;
+    public final static int VERB = 2;
     public final static int ADJECTIVE = 0x04;
     public final static int ADVERB = 0x08;
     public final static int PHRASAL_VERB = 0x10;

@@ -49,15 +49,13 @@ public class Inflexions extends ArrayList<Inflexion> {
 
         for (Inflexion inf : this) {
 
-            String[] inflexions = inf.inflexions;
-            res.append(SEP).append(inflexions.length);
-            for (String s : inflexions) {
+            res.append(SEP).append(inf.inflexions.length);
+            for (String s : inf.inflexions) {
                 res.append(SEP).append(s);
             }
 
-            String[] translations = inf.translations;
-            res.append(SEP).append(translations.length);
-            for (String s : translations) {
+            res.append(SEP).append(inf.translations.length);
+            for (String s : inf.translations) {
                 res.append(SEP).append(s);
             }
 
