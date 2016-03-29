@@ -65,7 +65,7 @@ public class Main extends javax.swing.JFrame implements DLHandler {
         exportLanguage = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Delving Languages v1.0");
+        setTitle("Delving Languages v1.1");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocation(new java.awt.Point(0, 0));
 
