@@ -128,21 +128,7 @@ public class DataManager {
             InStream in = new InStream(new File(wordsFolder, language + EXTENSION));
             int nwords = in.readInt();
             for (int i = 0; i < nwords; i++) {
-                
-                //
-                if (language.contains("Game of")) {
-                    Word w = readWord(in);
-                    
-                    for (Inflexion inf : w.getInflexions()) {
-               //     System.out.println("Size["+inf.translations.length+"]");
-                        
-                    }
-                    
-                    res.add(w);
-                }
-                //
-                
- //               res.add(readWord(in));
+                res.add(readWord(in));
             }
             in.close();
         } catch (Exception e) {
@@ -239,7 +225,7 @@ public class DataManager {
                     }
                     debW++;
                 }
-                System.out.println("Words added = "+debW + " ó "+ words.size());
+                System.out.println("Words added = " + debW + " ó " + words.size());
 
                 //DrawerWords
                 int nDrawerWords = stream.readInt();
@@ -321,12 +307,12 @@ public class DataManager {
                     debW++;
                     saveWord(stream, word);
                 }
-                System.out.println("Size: "+words.size() + ", saved:"+debW);
+                System.out.println("Size: " + words.size() + ", saved:" + debW);
 
                 //Drawer words
                 DrawerWords drawer = readDrawerWords(language.name);
                 stream.writeInt(drawer.size());
-                System.out.println("Drawer size = "+drawer.size());
+                System.out.println("Drawer size = " + drawer.size());
                 for (DrawerWord dw : drawer) {
                     stream.writeString(dw.name);
                 }
