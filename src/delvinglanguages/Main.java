@@ -315,7 +315,7 @@ public class Main extends javax.swing.JFrame implements DLHandler {
 //</editor-fold>
 
     @Override
-    public void reportChange(int change) {
+    public void reportChange(int change, Object obj) {
         switch (change) {
             case ADDED_LANGUAGE:
             case DELETED_LANGUAGE:

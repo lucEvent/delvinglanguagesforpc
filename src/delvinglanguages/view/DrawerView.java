@@ -110,11 +110,11 @@ public class DrawerView extends javax.swing.JPanel implements DLHandler {
     }//GEN-LAST:event_drawerListMouseClicked
 
     private void addDrawerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDrawerActionPerformed
-        String dword = input.getText();
-        if (!dword.isEmpty() && currentLanguage != null) {
-            data.addDrawerWord(currentLanguage, dword);
+        String reference = input.getText();
+        if (!reference.isEmpty() && currentLanguage != null) {
+            DrawerWord dword = data.addDrawerWord(currentLanguage, reference);
             displayDrawerList();
-            handler.reportChange(DLHandler.ADDED_DRAWER);
+            handler.reportChange(DLHandler.ADDED_DRAWER, dword);
 
             input.setText("");
         }
@@ -179,10 +179,10 @@ public class DrawerView extends javax.swing.JPanel implements DLHandler {
 //</editor-fold>
 
     @Override
-    public void reportChange(int change) {
+    public void reportChange(int change, Object obj) {
         switch (change) {
             case ADDED_WORD:
-                handler.reportChange(ADDED_WORD);
+                handler.reportChange(ADDED_WORD, obj);
             case DELETED_DRAWER:
             case MODIFIED_DRAWER:
                 displayDrawerList();

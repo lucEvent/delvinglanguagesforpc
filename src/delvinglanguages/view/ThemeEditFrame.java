@@ -199,11 +199,13 @@ public class ThemeEditFrame extends javax.swing.JFrame {
         }
         KernelManager kman = new KernelManager();
         if (purpose == Purpose.NEW) {
-            kman.addTheme(currentLanguage, new Theme(thName, pairs));
-            handler.reportChange(DLHandler.ADDED_THEME);
+            Theme theme = new Theme(thName, pairs);
+            kman.addTheme(currentLanguage, theme);
+            handler.reportChange(DLHandler.ADDED_THEME, theme);
         } else if (purpose == Purpose.MODIFY) {
-            kman.editTheme(currentLanguage, new Theme(thName, pairs), tempTheme);
-            handler.reportChange(DLHandler.MODIFIED_THEME);
+            Theme newTheme = new Theme(thName, pairs);
+            kman.editTheme(currentLanguage, newTheme, tempTheme);
+            handler.reportChange(DLHandler.MODIFIED_THEME, newTheme);
         }
         dispose();
     }//GEN-LAST:event_saveActionPerformed

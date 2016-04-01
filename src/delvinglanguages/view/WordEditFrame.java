@@ -679,15 +679,15 @@ public class WordEditFrame extends JFrame {
         switch (purpose) {
             case ADD_NEW:
                 dataManager.addWord(currentLanguage, word);
-                handler.reportChange(DLHandler.ADDED_WORD);
+                handler.reportChange(DLHandler.ADDED_WORD, word);
                 break;
             case ADD_FROM_DRAWER:
                 dataManager.addWord(currentLanguage, word, tempData.drawerword);
-                handler.reportChange(DLHandler.ADDED_WORD);
+                handler.reportChange(DLHandler.ADDED_WORD, word);
                 break;
             case EDIT:
                 dataManager.editWord(currentLanguage, word, tempData.editword);
-                handler.reportChange(DLHandler.MODIFIED_WORD);
+                handler.reportChange(DLHandler.MODIFIED_WORD, word);
         }
         this.dispose();
     }//GEN-LAST:event_saveActionPerformed

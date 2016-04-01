@@ -51,7 +51,7 @@ public class KernelManager {
         return language.themes;
     }
 
-    public void addLanguage(int code, String langName, int settings) {
+    public Language addLanguage(int code, String langName, int settings) {
         Language newLang = new Language(code, langName, AppSettings.NATIVE_NAME, settings);
 
         languages.add(newLang);
@@ -65,11 +65,14 @@ public class KernelManager {
 
         newLang.themes = new Themes();
         data.saveThemes(langName, newLang.themes);
+        return newLang;
     }
 
-    public void addDrawerWord(Language language, String dword) {
-        language.drawer_words.add(new DrawerWord(dword));
+    public DrawerWord addDrawerWord(Language language, String dword) {
+        DrawerWord newDWord = new DrawerWord(dword);
+        language.drawer_words.add(newDWord);
         data.saveDrawerWords(language.name, language.drawer_words);
+        return newDWord;
     }
 
     public void addWord(Language language, Word word) {
@@ -94,9 +97,9 @@ public class KernelManager {
         data.saveThemes(language.name, language.themes);
     }
 
-    public void editTheme(Language language, Theme theme, Theme tempTheme) {
-        language.themes.remove(tempTheme);
-        addTheme(language, theme);
+    public void editTheme(Language language, Theme newTheme, Theme oldTheme) {
+        language.themes.remove(oldTheme);
+        addTheme(language, newTheme);
     }
 
     public void deleteLanguage(Language language) {

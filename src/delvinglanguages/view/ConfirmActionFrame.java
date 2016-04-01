@@ -125,19 +125,19 @@ public class ConfirmActionFrame extends javax.swing.JFrame {
         switch (action) {
             case DELETE_LANGUAGE:
                 kMan.deleteLanguage(language);
-                handler.reportChange(DLHandler.DELETED_LANGUAGE);
+                handler.reportChange(DLHandler.DELETED_LANGUAGE, language);
                 break;
             case DELETE_WORD:
                 kMan.deleteWord(language, (Word) elemOfAction);
-                handler.reportChange(DLHandler.DELETED_WORD);
+                handler.reportChange(DLHandler.DELETED_WORD, elemOfAction);
                 break;
             case DELETE_DRAWER:
                 kMan.deleteDrawerWord(language, (DrawerWord) elemOfAction);
-                handler.reportChange(DLHandler.DELETED_DRAWER);
+                handler.reportChange(DLHandler.DELETED_DRAWER, elemOfAction);
                 break;
             case DELETE_THEME:
                 kMan.deleteTheme(language, (Theme) elemOfAction);
-                handler.reportChange(DLHandler.DELETED_THEME);
+                handler.reportChange(DLHandler.DELETED_THEME, elemOfAction);
         }
         dispose();
     }//GEN-LAST:event_confirmActionPerformed

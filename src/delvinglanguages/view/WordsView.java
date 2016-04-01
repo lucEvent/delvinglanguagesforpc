@@ -308,7 +308,20 @@ public class WordsView extends javax.swing.JPanel implements DLHandler {
     }//GEN-LAST:event_addWordActionPerformed
 
     private void searchWordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchWordKeyReleased
-        // TODO add your handling code here:
+        String search = this.searchWord.getText().toLowerCase();
+        Words words = data.getWordsOf(currentLanguage);
+        if (search.isEmpty()) {
+            displayWordList(words);
+            return;
+        }
+        Words matches = new Words();
+        for (Word w : words) {
+            if (w.getName().toLowerCase().contains(search)) {
+                matches.add(w);
+            }
+        }
+        System.out.println("Found [" + matches.size() + "] containing [" + search + "]");
+        displayWordList(matches);
     }//GEN-LAST:event_searchWordKeyReleased
 
     private void editWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWordActionPerformed
@@ -351,7 +364,8 @@ public class WordsView extends javax.swing.JPanel implements DLHandler {
             currentLanguage = language;
             currentWord = null;
         }
-        displayWordList(data.getWordsOf(language));
+        searchWordKeyReleased(null);
+//        displayWordList(data.getWordsOf(language));
 
         //debug
         boolean debug = false;
@@ -367,15 +381,15 @@ public class WordsView extends javax.swing.JPanel implements DLHandler {
                 }
             }
             System.out.println("######################");
-            System.out.println(" Nouns: "+ typecounter[0]);
-            System.out.println(" Verbs: "+ typecounter[1]);
-            System.out.println(" Adjcs: "+ typecounter[2]);
-            System.out.println(" Advbs: "+ typecounter[3]);
-            System.out.println(" Ph.Vs: "+ typecounter[4]);
-            System.out.println(" Exprs: "+ typecounter[5]);
-            System.out.println(" Preps: "+ typecounter[6]);
-            System.out.println(" Conjs: "+ typecounter[7]);
-            System.out.println(" Othrs: "+ typecounter[8]);
+            System.out.println(" Nouns: " + typecounter[0]);
+            System.out.println(" Verbs: " + typecounter[1]);
+            System.out.println(" Adjcs: " + typecounter[2]);
+            System.out.println(" Advbs: " + typecounter[3]);
+            System.out.println(" Ph.Vs: " + typecounter[4]);
+            System.out.println(" Exprs: " + typecounter[5]);
+            System.out.println(" Preps: " + typecounter[6]);
+            System.out.println(" Conjs: " + typecounter[7]);
+            System.out.println(" Othrs: " + typecounter[8]);
             System.out.println("######################");
         }
         //end debug
@@ -394,14 +408,18 @@ public class WordsView extends javax.swing.JPanel implements DLHandler {
     }
 
     private void displayWord(int index) {
-        if (index == -1) {
+        displayWord(index == -1 ? null : words.get(index));
+    }
+
+    private void displayWord(Word word) {
+        if (word == null) {
             currentWord = null;
             wordName.setText("");
             wordPronuntiation.setText("");
             displayType(0);
             inflexionList.setModel(new DefaultListModel());
         } else {
-            currentWord = words.get(index);
+            currentWord = word;
 
             wordName.setText(currentWord.getName());
             wordPronuntiation.setText("[" + currentWord.getPronunciation() + "]");
@@ -490,15 +508,16 @@ public class WordsView extends javax.swing.JPanel implements DLHandler {
 //</editor-fold>
 
     @Override
-    public void reportChange(int change) {
+    public void reportChange(int change, Object obj) {
         switch (change) {
             case DLHandler.MODIFIED_WORD:
-                displayWord(currentLanguage.themes.size() - 1);
+                System.out.println("Getting report of modified word");
+                displayWord((Word) obj);
                 break;
             case DLHandler.DELETED_WORD:
                 displayWord(-1);
         }
-        handler.reportChange(change);
+        handler.reportChange(change, data);
     }
 
 }

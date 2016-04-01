@@ -17,6 +17,6 @@ public interface DLHandler {
     int DELETED_DRAWER = 10;
     int DELETED_THEME = 11;
 
-    void reportChange(int change);
+    void reportChange(int change, Object obj);
 
 }

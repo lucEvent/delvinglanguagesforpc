@@ -6,8 +6,8 @@
         <group name="NetBeansProjects">
             <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/Main.java</file>
             <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/ChangeLog.xml</file>
-            <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/kernel/KernelManager.java</file>
-            <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/io/DataManager.java</file>
+            <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/view/WordEditFrame.java</file>
+            <file>file:/C:/Users/rafa_/Dropbox/Workspaces/NetBeansProjects/DelvingLanguages/src/delvinglanguages/view/WordsView.java</file>
         </group>
     </open-files>
 </project-private>

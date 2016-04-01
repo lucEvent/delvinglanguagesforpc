@@ -272,7 +272,7 @@ public class ThemesView extends javax.swing.JPanel implements DLHandler {
     }
 
     @Override
-    public void reportChange(int change) {
+    public void reportChange(int change, Object obj) {
         switch (change) {
             case DLHandler.MODIFIED_THEME:
                 displayTheme(currentLanguage.themes.size() - 1);
@@ -280,7 +280,7 @@ public class ThemesView extends javax.swing.JPanel implements DLHandler {
             case DLHandler.DELETED_THEME:
                 displayTheme(-1);
         }
-        handler.reportChange(change);
+        handler.reportChange(change, obj);
     }
 
 }

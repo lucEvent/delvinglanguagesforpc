@@ -217,8 +217,8 @@ public class AddLanguageFrame extends javax.swing.JFrame {
         int inf = enableINF.isEnabled() ? Language.MASK_ADJ : 0;
         int spe = enableSPE.isEnabled() ? Language.MASK_ESP_CHARS : 0;
 
-        data.addLanguage(LANGUAGE_CODES[index], langName, phv | inf | spe);
-        handler.reportChange(DLHandler.ADDED_LANGUAGE);
+        Language language = data.addLanguage(LANGUAGE_CODES[index], langName, phv | inf | spe);
+        handler.reportChange(DLHandler.ADDED_LANGUAGE, language);
         dispose();
     }//GEN-LAST:event_addLanguageActionPerformed
 
@@ -257,7 +257,7 @@ public class AddLanguageFrame extends javax.swing.JFrame {
             public void run() {
                 new AddLanguageFrame(new DLHandler() {
                     @Override
-                    public void reportChange(int change) {
+                    public void reportChange(int change, Object obj) {
                     }
                 }).setVisible(true);
             }
